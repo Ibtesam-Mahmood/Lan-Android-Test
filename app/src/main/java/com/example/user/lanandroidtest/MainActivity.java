@@ -8,6 +8,10 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,12 +22,26 @@ public class MainActivity extends AppCompatActivity {
 
     private BroadcastReceiver mReceiver;
 
+    private boolean wifiP2pState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
     }
 
     //Initializes necessary code to run the application
@@ -45,5 +63,32 @@ public class MainActivity extends AppCompatActivity {
         mManager = (WifiP2pManager) getSystemService(this.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
 
+        //Initializes the receiver
+        mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
     }
+
+    //Sets the wifi p2p state for the application
+    //Prompts the user about their p2p communications state
+    public void setIsWifiP2pEnabled(boolean state){
+        this.wifiP2pState = state;
+        if(state) {
+            Toast.makeText(this, "WiFi P2P Communications Enabled", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "Please Enable WiFi P2P Communications", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void displayPeers(ArrayList<WifiP2pDevice> deviceList){
+
+        ArrayList<String> ips = new ArrayList<>();
+
+        for (WifiP2pDevice device : deviceList){
+            ips.add(device.deviceAddress);
+        }
+
+
+
+    }
+
 }
