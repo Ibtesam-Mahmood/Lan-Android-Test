@@ -60,20 +60,4 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    public void refreshList(View view){
-
-        manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                Log.e("Peer", "Peers discovered");
-            }
-
-            @Override
-            public void onFailure(int i) {
-                Log.e("Peer", "No peers discovered");
-            }
-        });
-
-    }
-
 }

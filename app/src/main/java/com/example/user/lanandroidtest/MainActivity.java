@@ -8,7 +8,10 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,12 +27,16 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean wifiP2pState;
 
+    private LinearLayout ipLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         init();
+
+        ipLayout = (LinearLayout) findViewById(R.id.peerList);
     }
 
     @Override
@@ -79,14 +86,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void refreshList(View view){
+
+        ipLayout.removeAllViews();
+
+        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.e("Peer", "Peers discovered");
+            }
+
+            @Override
+            public void onFailure(int i) {
+                Log.e("Peer", "No peers discovered");
+            }
+        });
+
+    }
+
     public void displayPeers(ArrayList<WifiP2pDevice> deviceList){
 
-        ArrayList<String> ips = new ArrayList<>();
 
         for (WifiP2pDevice device : deviceList){
-            ips.add(device.deviceAddress);
-        }
 
+            TextView textView =  new TextView(this);
+
+            textView.setText(device.deviceName);
+
+            ipLayout.addView(textView);
+
+        }
 
 
     }
