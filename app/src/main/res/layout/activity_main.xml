@@ -22,11 +22,12 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/refresh"
         android:layout_width="352dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginStart="16dp"
+        android:onClick="refreshPeers"
         android:text="Refresh"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -37,6 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/refresh"
         app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

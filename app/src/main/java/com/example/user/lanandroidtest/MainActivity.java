@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
                 .setContext(this)
                 .setDiscoverableTimeoutMillis(DISCOVERABLE_TIMEOUT_MILLIS)
                 .setDiscoveryTimeoutMillis(DISCOVERY_TIMEOUT_MILLIS)
-                .setDiscoverablePingIntervalMillis(DISCOVERABLE_PING_INTERVAL_MILLIS)
                 .setDiscoveryListener(getNearDiscoveryListener(), Looper.getMainLooper())
                 .build();
 
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         mNearDiscovery.startDiscovery();
+        ((Button) findViewById(R.id.refresh)).setText("Discovering...");
 
     }
 
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPeersUpdate(Set<Host> hosts) {
                 //Obtains the list of peers and calls a method to display them
+                Log.e("Peer", "Peers discovered");
                 Host[] availablePeers = (Host[]) hosts.toArray();
                 displayPeers(availablePeers);
             }
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDiscoveryTimeout() {
                 mNearDiscovery.stopDiscovery();
+                ((Button) findViewById(R.id.refresh)).setText("Refresh");
                 Toast.makeText(activity, "Discovery timeout", Toast.LENGTH_SHORT).show();
             }
 
