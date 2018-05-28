@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adroitandroid.near.connect.NearConnect;
 import com.adroitandroid.near.discovery.NearDiscovery;
 import com.adroitandroid.near.model.Host;
 
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private static final long DISCOVERABLE_PING_INTERVAL_MILLIS = 5000;
 
     private NearDiscovery mNearDiscovery;
+    private NearConnect mNearConnect;
 
     private LinearLayout ipLayout;
     private MainActivity activity;
