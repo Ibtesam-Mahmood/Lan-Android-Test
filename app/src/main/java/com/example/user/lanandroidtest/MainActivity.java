@@ -19,7 +19,7 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     private static final long DISCOVERABLE_TIMEOUT_MILLIS = 60000;
-    private static final long DISCOVERY_TIMEOUT_MILLIS = 10000;
+    private static final long DISCOVERY_TIMEOUT_MILLIS = 20000;
     private static final long DISCOVERABLE_PING_INTERVAL_MILLIS = 5000;
 
     private NearDiscovery mNearDiscovery;
@@ -51,22 +51,22 @@ public class MainActivity extends AppCompatActivity {
     //Updates the peer list
     public void refreshPeers(View view){
 
-
+        ipLayout.removeAllViews();
         mNearDiscovery.startDiscovery();
         ((Button) findViewById(R.id.refresh)).setText("Discovering...");
 
     }
 
     //Displays the list of peers available to connect to
-    public void displayPeers(Host[] peers){
+    public void displayPeers(ArrayList<Host> peers){
 
         ipLayout.removeAllViews();
 
-        for(int i = 0; i < peers.length; i++){
+        for(int i = 0; i < peers.size(); i++){
 
             TextView peer = new TextView(this);
 
-            peer.setText(peers[i].getName());
+            peer.setText(peers.get(i).getName());
 
             ipLayout.addView(peer);
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPeersUpdate(Set<Host> hosts) {
                 //Obtains the list of peers and calls a method to display them
                 Log.e("Peer", "Peers discovered");
-                Host[] availablePeers = (Host[]) hosts.toArray();
+                ArrayList<Host> availablePeers = new ArrayList<>(hosts);
                 displayPeers(availablePeers);
             }
 
