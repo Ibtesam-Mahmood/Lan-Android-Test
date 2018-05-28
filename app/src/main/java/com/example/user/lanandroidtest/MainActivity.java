@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private NearDiscovery mNearDiscovery;
 
     private LinearLayout ipLayout;
+    private MainActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +40,26 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         ipLayout = findViewById(R.id.peerList);
+
+        mNearDiscovery.makeDiscoverable(android.os.Build.MODEL);
+        ( (TextView) findViewById(R.id.deviceName)).setText(android.os.Build.MODEL);
+
+        activity = this;
     }
 
     //Called when the refresh button is pressed
     //Updates the peer list
     public void refreshPeers(View view){
 
+
+        mNearDiscovery.startDiscovery();
+
     }
 
     //Displays the list of peers available to connect to
     public void displayPeers(Host[] peers){
+
+        ipLayout.removeAllViews();
 
         for(int i = 0; i < peers.length; i++){
 
@@ -73,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDiscoveryTimeout() {
-                Log.e("Peer", "Discovery Timeout");
+                mNearDiscovery.stopDiscovery();
+                Toast.makeText(activity, "Discovery timeout", Toast.LENGTH_SHORT).show();
             }
 
             @Override
