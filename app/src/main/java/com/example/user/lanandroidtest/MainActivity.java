@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void displayPeers(ArrayList<WifiP2pDevice> deviceList){
 
+        Log.e("Peer", "Size of peer list " + deviceList.size());
 
         for (WifiP2pDevice device : deviceList){
 
