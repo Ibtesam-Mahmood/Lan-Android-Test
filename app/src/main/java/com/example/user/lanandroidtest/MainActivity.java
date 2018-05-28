@@ -41,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
                 .setDiscoveryListener(getNearDiscoveryListener(), Looper.getMainLooper())
                 .build();
 
+        mNearConnect = new NearConnect.Builder()
+                .fromDiscovery(mNearDiscovery)
+                .setContext(this)
+                .setListener(getNearConnectListener(), Looper.getMainLooper())
+                .build();
+
         ipLayout = findViewById(R.id.peerList);
 
         mNearDiscovery.makeDiscoverable(android.os.Build.MODEL);
@@ -76,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Creates a listener used by NearDiscovery
     private NearDiscovery.Listener getNearDiscoveryListener() {
         return new NearDiscovery.Listener() {
             @Override
@@ -103,6 +110,32 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Peer", "You're not discoverable anymore");
             }
 
+        };
+    }
+
+    //Creates a listener used by NearConnect
+    private NearConnect.Listener getNearConnectListener() {
+        return new NearConnect.Listener() {
+            @Override
+            public void onReceive(byte[] bytes, final Host sender) {
+                // Process incoming data here
+            }
+
+            @Override
+            public void onSendComplete(long jobId) {
+                // jobId is the same as the return value of NearConnect.send(), an approximate epoch time of the send
+            }
+
+            @Override
+            public void onSendFailure(Throwable e, long jobId) {
+                // handle failed sends here
+            }
+
+            @Override
+            public void onStartListenFailure(Throwable e) {
+                // This tells that the NearConnect.startReceiving() didn't go through properly.
+                // Common cause would be that another instance of NearConnect is already listening and it's NearConnect.stopReceiving() needs to be called first
+            }
         };
     }
 }
