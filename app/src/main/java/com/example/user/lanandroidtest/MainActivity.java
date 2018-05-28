@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Initializes the receiver
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+        registerReceiver(mReceiver, intentFilter);
     }
 
     //Sets the wifi p2p state for the application
@@ -84,6 +85,15 @@ public class MainActivity extends AppCompatActivity {
         else {
             Toast.makeText(this, "Please Enable WiFi P2P Communications", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //Sets the device name if P2P is enabled
+    public void setDeviceName(String name){
+
+        TextView deviceName = findViewById(R.id.deviceName);
+
+        deviceName.setText(name);
+
     }
 
     public void refreshList(View view){
@@ -116,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
             ipLayout.addView(textView);
 
         }
+
+        Log.e("Peer", "Peers Listed");
 
 
     }
