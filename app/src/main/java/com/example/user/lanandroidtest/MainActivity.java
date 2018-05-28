@@ -4,7 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.adroitandroid.near.discovery.NearDiscovery;
+
 public class MainActivity extends AppCompatActivity {
+
+    private NearDiscovery mNearDiscovery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
