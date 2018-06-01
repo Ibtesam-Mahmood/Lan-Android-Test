@@ -4,11 +4,10 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.peak.salut.Callbacks.SalutCallback;
@@ -29,10 +28,10 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
     private String deviceName;
 
     private ToggleButton hostButton;
-    private Button refresh;
+    private ToggleButton discoverButton;
     private LinearLayout ipLayout;
 
-    private boolean isHosting = false; //Tracks if the application is hosting
+    private MainActivity activity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
         setContentView(R.layout.activity_main);
 
         //Sets the layout fields
-        refresh = findViewById(R.id.button);
+        discoverButton = findViewById(R.id.button);
         hostButton = findViewById(R.id.host);
         ipLayout =  findViewById(R.id.peerList);
 
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
         ((TextView) findViewById(R.id.deviceName)).setText(deviceName);
 
         //Initializes data receiver and port
-        mDataReceiver = new SalutDataReceiver(this, this);
+        mDataReceiver = new SalutDataReceiver(activity, activity);
         mServiceData =  new SalutServiceData("p2pTest", 25011, deviceName);
 
         //Defines the network
@@ -71,24 +70,54 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
         return new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                //What to do when the application enters hosting mode
-                isHosting = checked;
                 if(checked){ //Hosting
 
                     //Starts the network
                     network.startNetworkService(new SalutDeviceCallback() {
                         @Override
                         public void call(SalutDevice device) {
-                            Log.e("P2P", device.deviceName + " Has connected");
+                            Toast.makeText(activity, device.deviceName + " Has connected", Toast.LENGTH_SHORT).show();
                         }
                     });
-                    refresh.setClickable(false); //Ensures that the refresh button cannot be clicked
+                    discoverButton.setClickable(false); //Ensures that the discover button cannot be clicked
 
                 }
-                else{ //Not hosting
+                else{ //Not Hosting
 
                     network.stopNetworkService(false); //Disables the network
-                    refresh.setClickable(true); //Ensures that the refresh button can be clicked
+                    discoverButton.setClickable(true); //Ensures that the discover button can be clicked
+
+                }
+            }
+        };
+
+    }
+
+    //Called when the discover button is toggled, application enters client mode
+    public CompoundButton.OnCheckedChangeListener discover(){
+
+        return new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if(checked){ //Discovering
+
+                    //Starts the discovering for networks
+                    network.discoverNetworkServices(new SalutDeviceCallback() {
+                        @Override
+                        //Adds the host to the list
+                        public void call(SalutDevice device) {
+                            TextView host =  new TextView(activity);
+                            host.setText(device.deviceName);
+                            ipLayout.addView(host);
+                        }
+                    }, false);
+                    hostButton.setClickable(false); //Ensures that the host button cannot be clicked
+
+                }
+                else{ //Not Discovering
+
+                    network.stopServiceDiscovery(true); //Disables the search
+                    hostButton.setClickable(true); //Ensures that the host button can be clicked
 
                 }
             }
@@ -103,13 +132,6 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
-    //Called when the refresh button is pressed
-    //Updates the peer list
-    public void refreshPeers(View view){
-
 
     }
 }
