@@ -59,8 +59,9 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
             }
         });
 
-        //Sets the on check listener for the host button
+        //Sets the on check listener for the host and discover buttons
         hostButton.setOnCheckedChangeListener(host());
+        discoverButton.setOnCheckedChangeListener(discover());
 
     }
 
