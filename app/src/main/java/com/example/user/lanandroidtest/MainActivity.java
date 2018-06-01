@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
 
     private ToggleButton hostButton;
     private Button refresh;
+    private LinearLayout ipLayout;
 
     private boolean isHosting = false; //Tracks if the application is hosting
 
@@ -37,8 +39,10 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Sets the refresh button
+        //Sets the layout fields
         refresh = findViewById(R.id.button);
+        hostButton = findViewById(R.id.host);
+        ipLayout =  findViewById(R.id.peerList);
 
         //Device Name set
         deviceName = Build.MODEL;
@@ -57,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
         });
 
         //Sets the on check listener for the host button
-        hostButton = findViewById(R.id.host);
         hostButton.setOnCheckedChangeListener(host());
 
     }
@@ -70,12 +73,22 @@ public class MainActivity extends AppCompatActivity implements SalutDataCallback
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 //What to do when the application enters hosting mode
                 isHosting = checked;
-                if(checked){
+                if(checked){ //Hosting
 
-
+                    //Starts the network
+                    network.startNetworkService(new SalutDeviceCallback() {
+                        @Override
+                        public void call(SalutDevice device) {
+                            Log.e("P2P", device.deviceName + " Has connected");
+                        }
+                    });
+                    refresh.setClickable(false); //Ensures that the refresh button cannot be clicked
 
                 }
-                else{
+                else{ //Not hosting
+
+                    network.stopNetworkService(false); //Disables the network
+                    refresh.setClickable(true); //Ensures that the refresh button can be clicked
 
                 }
             }
