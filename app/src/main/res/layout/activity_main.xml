@@ -21,13 +21,15 @@
             android:orientation="vertical" />
     </ScrollView>
 
-    <Button
+    <ToggleButton
         android:id="@+id/button"
-        android:layout_width="352dp"
+        android:layout_width="178dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginStart="16dp"
-        android:text="Refresh"
+        android:onClick="refreshPeers"
+        android:textOff="Discover"
+        android:textOn="Discovering..."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -39,4 +41,15 @@
         android:layout_marginStart="16dp"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ToggleButton
+        android:id="@+id/host"
+        android:layout_width="178dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="4dp"
+        android:textOff="Host"
+        android:textOn="Hosting..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button" />
 </android.support.constraint.ConstraintLayout>
