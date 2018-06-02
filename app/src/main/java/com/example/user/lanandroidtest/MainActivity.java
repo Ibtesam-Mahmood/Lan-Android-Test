@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Sets view components
         ipLayout = findViewById(R.id.peerList);
-        ((TextView) findViewById(R.id.deviceName)).setText(Build.DEVICE);
+        ((TextView) findViewById(R.id.deviceName)).setText(Build.MODEL);
 
         // Indicates a change in the Wi-Fi P2P status.
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
