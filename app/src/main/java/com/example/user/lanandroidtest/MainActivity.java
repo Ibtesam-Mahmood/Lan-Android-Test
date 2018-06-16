@@ -1,5 +1,6 @@
 package com.example.user.lanandroidtest;
 
+import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ public class MainActivity extends AppCompatActivity {
     private ServerSocket mServerSocket;
 
     private int mLocalPort;
+    private String mServiceName;
+
+    private NsdManager.RegistrationListener mRegistrationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,36 @@ public class MainActivity extends AppCompatActivity {
         serviceInfo.setServiceName("_dnd._tcp");
         serviceInfo.setPort(port);
 
+    }
+
+    //Initializes the resitration listner
+    public void initializeRegistrationListener() {
+        mRegistrationListener = new NsdManager.RegistrationListener() {
+
+            @Override
+            public void onServiceRegistered(NsdServiceInfo NsdServiceInfo) {
+                // Save the service name. Android may have changed it in order to
+                // resolve a conflict, so update the name you initially requested
+                // with the name Android actually used.
+                mServiceName = NsdServiceInfo.getServiceName();
+            }
+
+            @Override
+            public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                // Registration failed! Put debugging code here to determine why.
+            }
+
+            @Override
+            public void onServiceUnregistered(NsdServiceInfo arg0) {
+                // Service has been unregistered. This only happens when you call
+                // NsdManager.unregisterService() and pass in this listener.
+            }
+
+            @Override
+            public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                // Unregistration failed. Put debugging code here to determine why.
+            }
+        };
     }
 
     //Called when the refresh button is pressed
