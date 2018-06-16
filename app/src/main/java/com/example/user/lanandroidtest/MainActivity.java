@@ -1,5 +1,6 @@
 package com.example.user.lanandroidtest;
 
+import android.content.Context;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private String mServiceName;
 
     private NsdManager.RegistrationListener mRegistrationListener;
+
+    private NsdManager mNsdManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +52,22 @@ public class MainActivity extends AppCompatActivity {
         serviceInfo.setServiceName("_dnd._tcp");
         serviceInfo.setPort(port);
 
+        mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
+
+        mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
+
     }
 
-    //Initializes the resitration listner
+    public void beginDiscovery(){
+
+
+
+    }
+
+    //Initializes the discovery listener
+    
+
+    //Initializes the registration listener
     public void initializeRegistrationListener() {
         mRegistrationListener = new NsdManager.RegistrationListener() {
 
