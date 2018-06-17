@@ -168,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
                     mServiceName = NsdServiceInfo.getServiceName();
                 if(NsdServiceInfo.getServiceType() != null)
                     mServiceType = NsdServiceInfo.getServiceType();
+
+                //Displays your current name
+                ((TextView) findViewById(R.id.deviceName)).setText(mServiceName);
+
+                //starts the service
                 beginDiscovery();
             }
 
