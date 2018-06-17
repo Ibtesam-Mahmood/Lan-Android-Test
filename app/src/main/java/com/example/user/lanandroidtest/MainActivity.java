@@ -59,8 +59,12 @@ public class MainActivity extends AppCompatActivity {
 
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
 
-        serviceInfo.setServiceName("DND");
-        serviceInfo.setServiceType("_dnd._tcp");
+        //Declares the service name and type
+        mServiceName = "DND";
+        mServiceType = "_dnd._tcp";
+
+        serviceInfo.setServiceName(mServiceName);
+        serviceInfo.setServiceType(mServiceType);
         serviceInfo.setPort(port);
 
         mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
@@ -140,8 +144,10 @@ public class MainActivity extends AppCompatActivity {
                 // Save the service name. Android may have changed it in order to
                 // resolve a conflict, so update the name you initially requested
                 // with the name Android actually used.
-                mServiceName = NsdServiceInfo.getServiceName();
-                mServiceType = NsdServiceInfo.getServiceType();
+                if(NsdServiceInfo.getServiceName() != null)
+                    mServiceName = NsdServiceInfo.getServiceName();
+                if(NsdServiceInfo.getServiceType() != null)
+                    mServiceType = NsdServiceInfo.getServiceType();
                 beginDiscovery();
             }
 
