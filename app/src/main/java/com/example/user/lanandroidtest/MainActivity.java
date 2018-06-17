@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,17 +27,27 @@ public class MainActivity extends AppCompatActivity {
     private NsdManager.RegistrationListener mRegistrationListener;
     private NsdManager.DiscoveryListener mDiscoveryListener;
 
+    private ArrayList<NsdServiceInfo> peers;
+
     private NsdManager mNsdManager;
+
+    private LinearLayout ipLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeServerSocket();
-        initializeRegistrationListener();
-        initializeDiscoveryListener();
+        //Initializes the layout to hold all peer names
+        ipLayout = findViewById(R.id.peerList);
 
+        //Initializes the peer list
+        peers =  new ArrayList<NsdServiceInfo>();
+
+        initializeServerSocket();
+
+        //Initializes the registration listener and registers the service
+        initializeRegistrationListener();
         registerService(mLocalPort);
     }
 
@@ -61,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Declares the service name and type
         mServiceName = "DND";
-        mServiceType = "_dnd._tcp";
+        mServiceType = "_http._tcp.";
 
         serviceInfo.setServiceName(mServiceName);
         serviceInfo.setServiceType(mServiceType);
@@ -73,9 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Initializes the discovery listener
+    //Initializes the discovery listener and begins the discovery
     public void beginDiscovery(){
 
+        initializeDiscoveryListener();
         mNsdManager.discoverServices(mServiceType, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
 
     }
@@ -106,6 +120,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "Same machine: " + mServiceName);
                 } else if (service.getServiceName().contains(mServiceName)){
                     //mNsdManager.resolveService(service, mResolveListener);
+                    //Adds peer to list and updates list
+                    peers.add(service);
+                    updatePeers();
                 }
             }
 
@@ -114,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
                 // When the network service is no longer available.
                 // Internal bookkeeping code goes here.
                 Log.e(TAG, "service lost" + service);
+                //removes peer from the list and updates list
+                peers.remove(service);
+                updatePeers();
             }
 
             @Override
@@ -167,6 +187,20 @@ public class MainActivity extends AppCompatActivity {
                 // Unregistration failed. Put debugging code here to determine why.
             }
         };
+    }
+
+    private void updatePeers(){
+
+        ipLayout.removeAllViews();
+
+        for(NsdServiceInfo peer: peers){
+
+            TextView peerName =  new TextView(this);
+            peerName.setText(peer.getServiceName());
+            ipLayout.addView(peerName);
+
+        }
+
     }
 
     //Called when the refresh button is pressed
