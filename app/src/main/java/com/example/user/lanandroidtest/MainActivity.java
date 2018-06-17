@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         initializeRegistrationListener();
         initializeDiscoveryListener();
 
-        //registerService(mLocalPort);
+        registerService(mLocalPort);
     }
 
     //Starts a socket on the next available port
@@ -46,11 +46,10 @@ public class MainActivity extends AppCompatActivity {
             mServerSocket =  new ServerSocket(0);
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e(TAG, "bruhhh");
         }
 
         //finds the server port
-        //mLocalPort = mServerSocket.getLocalPort();
+        mLocalPort = mServerSocket.getLocalPort();
 
     }
 
