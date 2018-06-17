@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         serviceInfo.setServiceType(mServiceType);
         serviceInfo.setPort(port);
 
+        //Displays your current name
+        ((TextView) findViewById(R.id.deviceName)).setText(mServiceName);
+
         mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
 
         mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     //mNsdManager.resolveService(service, mResolveListener);
                     //Adds peer to list and updates list
                     peers.add(service);
-                    updatePeers();
+                    //updatePeers();
                 }
             }
 
@@ -133,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "service lost" + service);
                 //removes peer from the list and updates list
                 peers.remove(service);
-                updatePeers();
+               // updatePeers();
             }
 
             @Override
@@ -168,9 +171,6 @@ public class MainActivity extends AppCompatActivity {
                     mServiceName = NsdServiceInfo.getServiceName();
                 if(NsdServiceInfo.getServiceType() != null)
                     mServiceType = NsdServiceInfo.getServiceType();
-
-                //Displays your current name
-                ((TextView) findViewById(R.id.deviceName)).setText(mServiceName);
 
                 //starts the service
                 beginDiscovery();
@@ -212,6 +212,6 @@ public class MainActivity extends AppCompatActivity {
     //Updates the peer list
     public void refreshPeers(View view){
 
-
+        updatePeers();
     }
 }
