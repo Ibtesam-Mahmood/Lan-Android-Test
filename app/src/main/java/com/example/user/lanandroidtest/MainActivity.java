@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private NsdManager.RegistrationListener mRegistrationListener;
     private NsdManager.DiscoveryListener mDiscoveryListener;
+    private NsdManager.ResolveListener mResolveListener;
 
     private ArrayList<NsdServiceInfo> peers;
 
@@ -47,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         initializeServerSocket();
 
-        //Initializes the registration listener and registers the service
+        //Initializes the registration and resolve listener;
         initializeRegistrationListener();
-        registerService(mLocalPort);
+        initializeResolveListener();
     }
 
     //Starts a socket on the next available port
@@ -194,6 +196,30 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    public void initializeResolveListener() {
+        mResolveListener = new NsdManager.ResolveListener() {
+
+            @Override
+            public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                // Called when the resolve fails. Use the error code to debug.
+                Log.e(TAG, "Resolve failed" + errorCode);
+            }
+
+            @Override
+            public void onServiceResolved(NsdServiceInfo serviceInfo) {
+                Log.e(TAG, "Resolve Succeeded. " + serviceInfo);
+
+                if (serviceInfo.getServiceName().equals(mServiceName)) {
+                    Log.d(TAG, "Same IP.");
+                    return;
+                }
+                mService = serviceInfo;
+                int port = mService.getPort();
+                InetAddress host = mService.getHost();
+            }
+        };
+    }
+
     private void updatePeers(){
 
         ipLayout.removeAllViews();
@@ -208,10 +234,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+        mNsdManager.unregisterService(mRegistrationListener);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerService(mLocalPort);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+        mNsdManager.unregisterService(mRegistrationListener);
+        super.onDestroy();
+    }
+
     //Called when the refresh button is pressed
     //Updates the peer list
     public void refreshPeers(View view){
-        
+
         updatePeers();
     }
 }
