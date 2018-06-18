@@ -26,7 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private NearDiscovery mNearDiscovery;
     private NearConnect mNearConnect;
 
+    private ArrayList<Host> peers;
+
     private LinearLayout ipLayout;
+    private Button connectButton;
     private MainActivity activity;
 
     @Override
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //discovery builder
         mNearDiscovery = new NearDiscovery.Builder()
                 .setContext(this)
                 .setDiscoverableTimeoutMillis(DISCOVERABLE_TIMEOUT_MILLIS)
@@ -41,22 +45,30 @@ public class MainActivity extends AppCompatActivity {
                 .setDiscoveryListener(getNearDiscoveryListener(), Looper.getMainLooper())
                 .build();
 
+        //conencion builder
         mNearConnect = new NearConnect.Builder()
                 .fromDiscovery(mNearDiscovery)
                 .setContext(this)
                 .setListener(getNearConnectListener(), Looper.getMainLooper())
                 .build();
 
+        //Initializes all view components
         ipLayout = findViewById(R.id.peerList);
+        connectButton = findViewById(R.id.connect);
 
+        //makes the app discoverable
         mNearDiscovery.makeDiscoverable(android.os.Build.MODEL);
         ( (TextView) findViewById(R.id.deviceName)).setText(android.os.Build.MODEL);
 
         activity = this;
+        peers = new ArrayList<>();
+
+        //sets the connect button to un-pressable initially
+        connectButton.setEnabled(false);
     }
 
     //Called when the refresh button is pressed
-    //Updates the peer list
+    //Starts the discovery for peers
     public void refreshPeers(View view){
 
         ipLayout.removeAllViews();
@@ -66,20 +78,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //When the connect button is pressed
+    //Connects to all peers
+    public void connectPeers(View view){
+
+
+
+    }
+
     //Displays the list of peers available to connect to
     public void displayPeers(ArrayList<Host> peers){
 
         ipLayout.removeAllViews();
 
+        this.peers = peers;
+
         for(int i = 0; i < peers.size(); i++){
 
-            Button peer = new Button(this);
+            TextView peer = new TextView(this);
 
             peer.setText(peers.get(i).getName());
 
             ipLayout.addView(peer);
 
         }
+
+        // enables/disables connect button dep[ending on if there are possible peers
+        if(peers.size() > 0)
+            connectButton.setEnabled(true);
+        else
+            connectButton.setEnabled(false);
 
     }
 
