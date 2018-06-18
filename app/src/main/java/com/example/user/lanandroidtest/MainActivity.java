@@ -19,9 +19,10 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
+    //WORKS
+
     private static final long DISCOVERABLE_TIMEOUT_MILLIS = 60000;
     private static final long DISCOVERY_TIMEOUT_MILLIS = 10000;
-    private static final long DISCOVERABLE_PING_INTERVAL_MILLIS = 5000;
     private static final String ADD_NUMBER = "add_number";
 
     private NearDiscovery mNearDiscovery;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         //sets the connect/add button to un-pressable initially
         connectButton.setEnabled(false);
-        //add.setEnabled(false);
+        add.setEnabled(false);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         mNearConnect.startReceiving();
 
         //enables the add button
-        //add.setEnabled(true);
+        add.setEnabled(true);
 
     }
 
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         addNumber();
 
         for(Host peer: peers){
-           // mNearConnect.send(ADD_NUMBER.getBytes(), peer);
+            mNearConnect.send(ADD_NUMBER.getBytes(), peer);
         }
 
 
