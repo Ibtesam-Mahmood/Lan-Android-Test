@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -121,11 +122,11 @@ public class MainActivity extends AppCompatActivity {
                     // The name of the service tells the user what they'd be
                     // connecting to. It could be "Bob's Chat App".
                     Log.d(TAG, "Same machine: " + mServiceName);
-                } else if (service.getServiceName().contains(mServiceName)){
+                } else if (service.getServiceName().contains("DND")){
                     //mNsdManager.resolveService(service, mResolveListener);
                     //Adds peer to list and updates list
+                    Log.e(TAG, service.getServiceName());
                     peers.add(service);
-                    //updatePeers();
                 }
             }
 
@@ -136,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "service lost" + service);
                 //removes peer from the list and updates list
                 peers.remove(service);
-               // updatePeers();
             }
 
             @Override
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
         for(NsdServiceInfo peer: peers){
 
-            TextView peerName =  new TextView(this);
+            Button peerName =  new Button(this);
             peerName.setText(peer.getServiceName());
             ipLayout.addView(peerName);
 
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
     //Called when the refresh button is pressed
     //Updates the peer list
     public void refreshPeers(View view){
-
+        
         updatePeers();
     }
 }
