@@ -10,11 +10,9 @@
         android:layout_width="388dp"
         android:layout_height="481dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="7dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.075">
@@ -51,8 +49,8 @@
         android:layout_width="162dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginStart="36dp"
         android:text="Connect"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/refresh" />
 </android.support.constraint.ConstraintLayout>
