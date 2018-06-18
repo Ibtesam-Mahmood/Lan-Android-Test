@@ -67,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
         connectButton.setEnabled(false);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mNearDiscovery.stopDiscovery();
+        mNearDiscovery.makeNonDiscoverable();
+        mNearConnect.stopReceiving(true);
+    }
+
     //Called when the refresh button is pressed
     //Starts the discovery for peers
     public void refreshPeers(View view){
@@ -82,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     //Connects to all peers
     public void connectPeers(View view){
 
-
+        mNearConnect.startReceiving();
 
     }
 
