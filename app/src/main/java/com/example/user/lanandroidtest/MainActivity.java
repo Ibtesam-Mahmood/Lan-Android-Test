@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         //sets the connect/add button to un-pressable initially
         connectButton.setEnabled(false);
-        add.setEnabled(false);
+        //add.setEnabled(false);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         mNearConnect.startReceiving();
 
         //enables the add button
-        add.setEnabled(true);
+        //add.setEnabled(true);
 
     }
 
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         addNumber();
 
         for(Host peer: peers){
-            mNearConnect.send(ADD_NUMBER.getBytes(), peer);
+           // mNearConnect.send(ADD_NUMBER.getBytes(), peer);
         }
 
 
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         int num = Integer.parseInt( number.getText().toString() );
         num++;
-        number.setText(num);
+        number.setText(num + "");
 
     }
 
