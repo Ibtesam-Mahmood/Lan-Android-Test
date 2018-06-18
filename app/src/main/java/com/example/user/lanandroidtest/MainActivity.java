@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i = 0; i < peers.size(); i++){
 
-            TextView peer = new TextView(this);
+            Button peer = new Button(this);
 
             peer.setText(peers.get(i).getName());
 
