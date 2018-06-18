@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private static final long DISCOVERABLE_TIMEOUT_MILLIS = 60000;
     private static final long DISCOVERY_TIMEOUT_MILLIS = 10000;
     private static final long DISCOVERABLE_PING_INTERVAL_MILLIS = 5000;
+    private static final String ADD_NUMBER = "add_number";
 
     private NearDiscovery mNearDiscovery;
     private NearConnect mNearConnect;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Host> peers;
 
     private LinearLayout ipLayout;
+    private TextView number;
+    private Button add;
     private Button connectButton;
     private MainActivity activity;
 
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         //Initializes all view components
         ipLayout = findViewById(R.id.peerList);
         connectButton = findViewById(R.id.connect);
+        add = findViewById(R.id.add);
+        number = findViewById(R.id.number);
 
         //makes the app discoverable
         mNearDiscovery.makeDiscoverable(android.os.Build.MODEL);
@@ -63,8 +68,9 @@ public class MainActivity extends AppCompatActivity {
         activity = this;
         peers = new ArrayList<>();
 
-        //sets the connect button to un-pressable initially
+        //sets the connect/add button to un-pressable initially
         connectButton.setEnabled(false);
+        add.setEnabled(false);
     }
 
     @Override
@@ -91,6 +97,30 @@ public class MainActivity extends AppCompatActivity {
     public void connectPeers(View view){
 
         mNearConnect.startReceiving();
+
+        //enables the add button
+        add.setEnabled(true);
+
+    }
+
+    //Sends add command to all peers and adds 1 to the counter
+    public void addButton(View view){
+
+        addNumber();
+
+        for(Host peer: peers){
+            mNearConnect.send(ADD_NUMBER.getBytes(), peer);
+        }
+
+
+    }
+
+    //Adds 1 to the counter
+    public void addNumber(){
+
+        int num = Integer.parseInt( number.getText().toString() );
+        num++;
+        number.setText(num);
 
     }
 
@@ -156,6 +186,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(byte[] bytes, final Host sender) {
                 // Process incoming data here
+                if(bytes != null){
+                    //handles all recive cases
+                    switch(new String(bytes)){
+
+                        case ADD_NUMBER:
+                            addNumber();
+                            break;
+
+                    }
+
+                }
             }
 
             @Override
