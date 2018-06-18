@@ -20,7 +20,7 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
 
     private static final long DISCOVERABLE_TIMEOUT_MILLIS = 60000;
-    private static final long DISCOVERY_TIMEOUT_MILLIS = 20000;
+    private static final long DISCOVERY_TIMEOUT_MILLIS = 10000;
     private static final long DISCOVERABLE_PING_INTERVAL_MILLIS = 5000;
 
     private NearDiscovery mNearDiscovery;
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public void refreshPeers(View view){
 
         ipLayout.removeAllViews();
+        mNearDiscovery.makeDiscoverable(android.os.Build.MODEL);
         mNearDiscovery.startDiscovery();
         ((Button) findViewById(R.id.refresh)).setText("Discovering...");
 
